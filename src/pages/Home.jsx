@@ -6,9 +6,11 @@ import { ChatData } from "../context/ChatContext";
 import { IoMdSend } from "react-icons/io";
 import { LoadingBig, LoadingSmall } from "../components/Loading";
 import Markdown from "react-markdown";
+import * as XLSX from "xlsx";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [fileData, setFileData] = useState(null);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -26,7 +28,35 @@ const Home = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    fetchResponse();
+
+    if (fileData) {
+      const reader = new FileReader();
+
+      reader.onload = async (event) => {
+        const fileContent = event.target.result;
+
+        // Process Excel or Text File
+        let processedData;
+        if (fileData.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+          const workbook = XLSX.read(fileContent, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          processedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        } else {
+          processedData = fileContent.split("\n").map(line => line.trim()).filter(line => line);
+        }
+
+        // Convert processed data to a string format
+        const formattedData = processedData.join("\n");
+
+        // Call fetchResponse with the formatted data
+        fetchResponse(formattedData);
+      };
+
+      reader.readAsBinaryString(fileData);
+    } else {
+      fetchResponse();
+    }
   };
 
   const messagecontainerRef = useRef();
@@ -110,7 +140,13 @@ const Home = () => {
           <form
             onSubmit={submitHandler}
             className="flex justify-center items-center"
-          >
+            >
+            <input
+              type="file"
+              onChange={(e) => setFileData(e.target.files[0])}
+              accept=".xlsx, .xls, .csv, .txt"
+              className="ml-4 p-4 bg-gray-700 rounded text-white outline-none"
+            />              
             <input
               className="flex-grow p-4 bg-gray-700 rounded-l text-white outline-none"
               type="text"
@@ -119,6 +155,12 @@ const Home = () => {
               onChange={(e) => setPrompt(e.target.value)}
               required
             />
+            {/* <input
+              type="file"
+              onChange={(e) => setFileData(e.target.files[0])}
+              accept=".xlsx, .xls, .csv, .txt"
+              className="ml-4 p-4 bg-gray-700 rounded text-white outline-none"
+            /> */}
             <button className="p-4 bg-gray-700 rounded-r text-2xl text-white">
               <IoMdSend />
             </button>

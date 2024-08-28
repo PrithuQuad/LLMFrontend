@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const Homepage = () => {
   const [typingStatus, setTypingStatus] = useState("human1");
+const userRole = localStorage.getItem("role"); // Get the user's role from localStorage
 
   return (
     <div className="homepage">

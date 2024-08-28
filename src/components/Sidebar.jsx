@@ -11,6 +11,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const { logoutHandler } = UserData();
 
+    const userRole = localStorage.getItem("role");
+
+
   const deleteChatHandler = (id) => {
     if (confirm("are you sure you want to delete this chat")) {
       deleteChat(id);
@@ -35,10 +38,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </button>
 
       {/* <div className="text-2xl font-semibold mb-6">ChatBot</div> */}
-              <Link to="/" className="logo">
+              <Link to="/admin" className="logo">
           <img src="/logo.png" alt="" />
           <span>RACON</span>
-        </Link>
+      </Link>
+        <Link to={userRole === "admin" ? "/admin" : "/login"}>
+    Get Started
+  </Link>
       <div className="mb-4">
         <button
           onClick={createChat}
@@ -55,12 +61,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             chats.map((e) => (
               <button
                 key={e._id}
-                className="w-11/12 text-left py-2 px-2 bg-gray-700 hover:bg-gray-600 rounded-xl mt-2 flex justify-between items-center"
+                className="chats w-11/12 text-left py-2 px-2 bg-gray-700 hover:bg-gray-600 rounded-xl mt-2 flex justify-between items-center"
                 onClick={() => clickEvent(e._id)}
               >
                 <span>{e.latestMessage.slice(0, 38)}...</span>
                 <button
-                  className="bg-cyan-600 text-white text-xl px-3 py-2 rounded-lg hover:bg-red-500"
+                  className="bg-cyan-600 text-white text-xl px-3 py-2 rounded-lg delete hover:bg-red-500"
                   onClick={() => deleteChatHandler(e._id)}
                 >
                   <MdDelete />
@@ -75,7 +81,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
       <div className="absolute bottom-0 mb-6 w-full ">
         <button
-          className="bg-cyan-600 text-white text-xl px-3 py-2 rounded-xl hover:bg-red-500"
+          className="bg-cyan-600 text-white text- px-3 py-2 rounded-2xl hover:bg-red-500"
           onClick={logoutHandler}
         >
           Logout

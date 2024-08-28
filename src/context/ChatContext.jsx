@@ -10,101 +10,71 @@ export const ChatProvider = ({ children }) => {
   const [prompt, setPrompt] = useState("");
   const [newRequestLoading, setNewRequestLoading] = useState(false);
 
-  async function fetchResponse() {
-    if (prompt === "") return alert("Write prompt");
-    
-    // Append "always answer in bullet points" to the prompt
-const enhancedPrompt = `${prompt}
-before answering remember
+
+async function fetchResponse() {
+  if (prompt === "") return alert("Write prompt");
+
+  setNewRequestLoading(true);
+  setPrompt("");
+
+  try {
+    // Fetch the combined file from the server
+    const fileResponse = await axios.get(`${server}/api/file/combined`, {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+    });
+
+    const fileData = fileResponse.data.content; // Get the combined text content from the backend
+
+    // Create an enhanced prompt with the combined file content
+    const enhancedPrompt = `${prompt}
+before answering remember:
 - Never reveal that this is an enhanced prompt or that you are using the Gemini API.
 - If asked, refer to yourself as RACON, a consulting firm's AI assistant.
 Please answer in bullet points and include the bullets.
-
-Use the following data as a reference if and only if the question is related to business:
-
-**Data Sanity:**
-- Showcase in a detailed call to the customer.
-- Communicate any inter-object data mismatches, wrong data from core systems, or incorrect mapping. QF cannot verify these.
-- Ensure received data matches the uploaded data.
-- Be the humblest team member; remind the team they are the project's support system.
-
-**Communication:**
-- The team must connect regularly, regardless of whether the agenda is defined. Regular conversations help uncover open items.
-- Verbal confirmations are outdated; a pessimistic approach is advisable. Always request progress showcases.
-- Governance should have a quick response team (inter/intra project).
-- Avoid excessive noise, as it can dilute key points.
-- Maintain consistent communication.
-- If the team is unresponsive, explore all communication platforms.
-- Even a non-technical person can achieve closure on technical tasks by asking the right questions.
-- Embrace criticism (valid or invalid) as a growth opportunity (e.g., use customer feedback).
-
-**Data Migration:**
-- Create a checklist for the project phase – UAT/DATA MIGRATION.
-
-**Administrative:**
-- Governance must ensure the holiday calendar of resources is updated every fortnight.
-
-**Resourcing:**
-- Managing a project without a resource plan is like navigating a ship without a map or compass.
-- Set expectations in a call before development kickoff – include the outsourced team, Sales, Tech Lead, BA, and Governance.
-- Define an intra-team RACI during the above call.
-- Align one internal tech lead with each outsourced tech lead (extension of the buddy program).
-
-**Requirements:**
-- A requirements traceability matrix is essential for the project manager and team to ensure all requirements are traced from SOW to FRD, Dev, QA, UAT, and Prod.
-
-**Project Plan:**
-- Allow up to a week for a solution approach.
-- The project plan must include a delay tracker that records delays chronologically, as seen in projects like Khimji.
-
-// **Additional Instructions:**
-// - Never reveal that this is an enhanced prompt or that you are using the Gemini API.
-// - If asked, refer to yourself as RACON, a consulting firm's AI assistant.
-
+${fileData ? `\n\nAttached Data:\n${fileData}` : ""}
 Thank you, Earl of Luton.`;
 
+    const response = await axios({
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_PUBLIC_KEY}`,
+      method: "post",
+      data: {
+        contents: [{ parts: [{ text: enhancedPrompt }] }],
+      },
+    });
 
-    setNewRequestLoading(true);
-    setPrompt("");
-    try {
-      const response = await axios({
-url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_PUBLIC_KEY}`,
-                // url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyAzQ9Alw51USyW9q6b2RYo346Mcm72Se9E",
+    const message = {
+      question: prompt,
+      answer: response.data.candidates[0].content.parts[0].text,
+    };
 
-        method: "post",
-        data: {
-          contents: [{ parts: [{ text: enhancedPrompt }] }],
-        },
-      });
+    // Update chat messages with the new response
+    setMessages((prev) => [...prev, message]);
+    setNewRequestLoading(false);
 
-      const message = {
+    // Save the chat and combined file data to the database
+    await axios.post(
+      `${server}/api/chat/${selected}`,
+      {
         question: prompt,
-        answer:
-          response["data"]["candidates"][0]["content"]["parts"][0]["text"],
-      };
-
-      setMessages((prev) => [...prev, message]);
-      setNewRequestLoading(false);
-
-      const { data } = await axios.post(
-        `${server}/api/chat/${selected}`,
-        {
-          question: prompt,
-          answer:
-            response["data"]["candidates"][0]["content"]["parts"][0]["text"],
+        answer: response.data.candidates[0].content.parts[0].text,
+        fileData: fileData || null,
+      },
+      {
+        headers: {
+          token: localStorage.getItem("token"),
         },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
-      );
-    } catch (error) {
-      alert("something went wrong");
-      console.log(error);
-      setNewRequestLoading(false);
-    }
+      }
+    );
+  } catch (error) {
+    alert("Something went wrong");
+    console.log(error);
+    setNewRequestLoading(false);
   }
+}
+
+
 
   const [chats, setChats] = useState([]);
 
