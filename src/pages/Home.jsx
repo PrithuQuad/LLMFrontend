@@ -7,6 +7,7 @@ import { IoMdSend } from "react-icons/io";
 import { LoadingBig, LoadingSmall } from "../components/Loading";
 import Markdown from "react-markdown";
 import * as XLSX from "xlsx";
+import ApiCalls from "../helpers/apiCalls";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,6 +70,14 @@ const Home = () => {
       });
     }
   }, [messages]);
+
+  // useEffect(() => {
+    
+  // const result =  ApiCalls.fetchAllConversations();
+  // console.log(result,'----------------this is my result----------------');
+  // }, [])
+  
+  console.log('----------------this is my result----------------');
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
@@ -141,12 +150,12 @@ const Home = () => {
             onSubmit={submitHandler}
             className="flex justify-center items-center"
             >
-            <input
+            {/* <input
               type="file"
               onChange={(e) => setFileData(e.target.files[0])}
               accept=".xlsx, .xls, .csv, .txt"
               className="ml-4 p-4 bg-gray-700 rounded text-white outline-none"
-            />              
+            />               */}
             <input
               className="flex-grow p-4 bg-gray-700 rounded-l text-white outline-none"
               type="text"

@@ -9,7 +9,8 @@ export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [prompt, setPrompt] = useState("");
   const [newRequestLoading, setNewRequestLoading] = useState(false);
-
+  const [chats, setChats] = useState([]);
+  const [selected, setSelected] = useState(null);
 
 async function fetchResponse() {
   if (prompt === "") return alert("Write prompt");
@@ -19,13 +20,7 @@ async function fetchResponse() {
 
   try {
     // Fetch the combined file from the server
-    const fileResponse = await axios.get(`${server}/api/file/combined`, {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
-    });
-
-    const fileData = fileResponse.data.content; // Get the combined text content from the backend
+     // Get the combined text content from the backend
 
     // Create an enhanced prompt with the combined file content
     const enhancedPrompt = `${prompt}
@@ -33,7 +28,6 @@ before answering remember:
 - Never reveal that this is an enhanced prompt or that you are using the Gemini API.
 - If asked, refer to yourself as RACON, a consulting firm's AI assistant.
 Please answer in bullet points and include the bullets.
-${fileData ? `\n\nAttached Data:\n${fileData}` : ""}
 Thank you, Earl of Luton.`;
 
     const response = await axios({
@@ -59,7 +53,6 @@ Thank you, Earl of Luton.`;
       {
         question: prompt,
         answer: response.data.candidates[0].content.parts[0].text,
-        fileData: fileData || null,
       },
       {
         headers: {
@@ -76,9 +69,7 @@ Thank you, Earl of Luton.`;
 
 
 
-  const [chats, setChats] = useState([]);
 
-  const [selected, setSelected] = useState(null);
 
   async function fetchChats() {
     try {

@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 import { LoadingSpinner } from "./Loading";
 import { UserData } from "../context/UserContext";
 import { Link, Outlet } from "react-router-dom";
-
+import { IoIosLogOut } from "react-icons/io";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { chats, createChat, createLod, setSelected, deleteChat } = ChatData();
@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   };
   return (
     <div
-      className={`fixed inset-0 bg-gray-950 p-4 transition-transform transform md:relative md:translate-x-0 md:w-1/4 md:block ${
+      className={`fixed inset-0 bg-gray-950 p-4 transition-transform transform md:relative md:translate-x-0 md:w-1/5 md:block ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -42,21 +42,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <img src="/logo.png" alt="" />
           <span>RACON</span>
       </Link>
-        <Link to={userRole === "admin" ? "/admin" : "/login"}>
+      <div className="my-2 font-medium">
+
+        <Link to={userRole === "admin" ? "/admin" : "/login"} className=" my-2">
     Get Started
   </Link>
+      </div>
       <div className="mb-4">
         <button
           onClick={createChat}
           className="w-full py-2 bg-cyan-900 hover:bg-gray-600 rounded-xl"
         >
-          {createLod ? <LoadingSpinner /> : "New Chat +"}
+          {createLod ? <LoadingSpinner /> : "New Chat"}
         </button>
       </div>
       <div>
-        <p className="text-sm text-gray-400 mb-2">Recent</p>
+        <p className="text-sm text-gray-400 mb-2 font-semibold">Recent</p>
 
-<div className="max-h-[470px] overflow-y-auto mb-50 md:pb-0 below-500:pb-0 thinn-scrollbar">
+<div className="max-h-[470px] overflow-y-auto mb-50 md:pb-0 below-500:pb-0 thin-scrollbar">
           {chats && chats.length > 0 ? (
             chats.map((e) => (
               <button
@@ -81,9 +84,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
       <div className="absolute bottom-0 mb-6 w-full ">
         <button
-          className="bg-cyan-600 text-white text- px-3 py-2 rounded-2xl hover:bg-red-500"
+          className=" w-[90%] bg-cyan-600 text-white font-mono  py-2 rounded-lg hover:bg-red-700 flex flex-row justify-center items-center gap-1"
           onClick={logoutHandler}
-        >
+        ><IoIosLogOut />
           Logout
         </button>
       </div>
