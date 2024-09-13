@@ -5,13 +5,17 @@ import { LoadingSpinner } from "./Loading";
 import { UserData } from "../context/UserContext";
 import { Link, Outlet } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import { useEffect } from "react";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const { chats, createChat, createLod, setSelected, deleteChat } = ChatData();
+  const { chats, createChat, createLod, setSelected, deleteChat,fetchChats } = ChatData();
 
   const { logoutHandler } = UserData();
 
     const userRole = localStorage.getItem("role");
+  useEffect(() =>{
+    fetchChats();
+  },[])
 
 
   const deleteChatHandler = (id) => {

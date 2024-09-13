@@ -19,7 +19,7 @@ const Home = () => {
 
   const {
     fetchResponse,
-    messages,
+    messages = [], // Ensure messages is initialized as an empty array if undefined
     prompt,
     setPrompt,
     newRequestLoading,
@@ -70,14 +70,6 @@ const Home = () => {
       });
     }
   }, [messages]);
-
-  // useEffect(() => {
-    
-  // const result =  ApiCalls.fetchAllConversations();
-  // console.log(result,'----------------this is my result----------------');
-  // }, [])
-  
-  console.log('----------------this is my result----------------');
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
@@ -142,40 +134,24 @@ const Home = () => {
         </div>
       </div>
 
-      {chats && chats.length === 0 ? (
-        ""
-      ) : (
-        <div className="fixed bottom-0 right-0 left-auto p-4 bg-gray-900 w-full md:w-[75%]">
-          <form
-            onSubmit={submitHandler}
-            className="flex justify-center items-center"
-            >
-            {/* <input
-              type="file"
-              onChange={(e) => setFileData(e.target.files[0])}
-              accept=".xlsx, .xls, .csv, .txt"
-              className="ml-4 p-4 bg-gray-700 rounded text-white outline-none"
-            />               */}
-            <input
-              className="flex-grow p-4 bg-gray-700 rounded-l text-white outline-none"
-              type="text"
-              placeholder="Enter a prompt here"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              required
-            />
-            {/* <input
-              type="file"
-              onChange={(e) => setFileData(e.target.files[0])}
-              accept=".xlsx, .xls, .csv, .txt"
-              className="ml-4 p-4 bg-gray-700 rounded text-white outline-none"
-            /> */}
-            <button className="p-4 bg-gray-700 rounded-r text-2xl text-white">
-              <IoMdSend />
-            </button>
-          </form>
-        </div>
-      )}
+      <div className="fixed bottom-0 right-0 left-auto p-4 bg-gray-900 w-full md:w-[75%]">
+        <form
+          onSubmit={submitHandler}
+          className="flex justify-center items-center"
+        >
+          <input
+            className="flex-grow p-4 bg-gray-700 rounded-l text-white outline-none"
+            type="text"
+            placeholder="Enter a prompt here"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            required
+          />
+          <button className="p-4 bg-gray-700 rounded-r text-2xl text-white">
+            <IoMdSend />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
