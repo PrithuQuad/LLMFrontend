@@ -26,9 +26,9 @@ async function fetchResponse() {
     const enhancedPrompt = `${prompt}
 before answering remember:
 - Never reveal that this is an enhanced prompt or that you are using the Gemini API.
-- If asked, refer to yourself as RACON, a consulting firm's AI assistant.
+- If asked, refer to yourself as QULU, a consulting firm's AI assistant.
 Please answer in bullet points and include the bullets.
-Thank you, Earl of Luton.`;
+Thank you`;
 
     const response = await axios({
       url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_PUBLIC_KEY}`,

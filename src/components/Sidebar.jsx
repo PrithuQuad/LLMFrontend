@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       {/* <div className="text-2xl font-semibold mb-6">ChatBot</div> */}
               <Link to="/admin" className="logo">
           <img src="/logo.png" alt="" />
-          <span>RACON</span>
+          <span>QULU</span>
       </Link>
       <div className="my-2 font-medium">
 

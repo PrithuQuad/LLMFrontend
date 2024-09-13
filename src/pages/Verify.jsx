@@ -27,7 +27,7 @@ const Verify = () => {
         className="bg-white p-6 rounded shadow-md w-full login md:w-[500px]"
         onSubmit={submitHandler}
       >
-        <h1>RACON</h1>
+        <h1>QULU</h1>
         <h2 className="text-2xl mb-4">Verify</h2>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="otp">

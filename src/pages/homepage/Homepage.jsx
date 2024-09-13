@@ -11,7 +11,7 @@ const userRole = localStorage.getItem("role"); // Get the user's role from local
     <div className="homepage">
       <img src="/orbital.png" alt="" className="orbital" />
       <div className="left">
-        <h1>RACON</h1>
+        <h1>QULU</h1>
         <h2>Supercharge your creativity and productivity</h2>
         <h3>
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat sint
@@ -44,7 +44,7 @@ const userRole = localStorage.getItem("role"); // Get the user's role from local
                 () => {
                   setTypingStatus("bot");
                 },
-                "RACON: Intra team RACI to be defined in above call​",
+                "QULU: Intra team RACI to be defined in above call​",
                 2000,
                 () => {
                   setTypingStatus("human2");
@@ -54,7 +54,7 @@ const userRole = localStorage.getItem("role"); // Get the user's role from local
                 () => {
                   setTypingStatus("bot");
                 },
-                "RACON: Too much noise dissolves the key highlight you want to make​",
+                "QULU: Too much noise dissolves the key highlight you want to make​",
                 2000,
                 () => {
                   setTypingStatus("human1");
